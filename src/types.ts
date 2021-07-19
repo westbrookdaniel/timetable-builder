@@ -16,8 +16,9 @@ export interface Layout {
 }
 
 export interface Period {
-  period: Period
-  timeslot: Timeslot
+  type: string
+  timeslot: number
+  day: number
 }
 
 export interface PeriodType {

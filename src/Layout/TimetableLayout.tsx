@@ -1,59 +1,108 @@
 import React from 'react'
 import RGL, { WidthProvider } from 'react-grid-layout'
 import { useStickyState } from '../helpers/useStickyState'
-import Period from '../Period'
+import Period from './Period'
 import 'react-grid-layout/css/styles.css'
 import './TimetableLayout.css'
+import { Box, Button, HStack, layout } from '@chakra-ui/react'
+import OptionsModal from '../options/OptionsModal'
+import { useLayout } from '../store'
+import { formatTime } from '../helpers/formatTime'
 
 type Layout = any[]
 
 const ReactGridLayout = WidthProvider(RGL)
-/**
- * This layout demonstrates how to sync to localstorage.
- */
-export default function TimetableLayout({
-  className = 'layout',
-  cols = 12,
-  rowHeight = 150,
-}) {
-  const [layout, setLayout] = useStickyState<Layout>([], 'layout')
 
-  function resetLayout() {
-    setLayout([])
-  }
+const commonLayout = { maxW: 1 }
 
-  function onLayoutChange(newLayout: Layout) {
-    setLayout(newLayout)
-  }
+const labelLayout = { i: 'layout-label', x: 0, y: 0, w: 1, h: 1, static: true }
+
+export default function TimetableLayout({ cols = 6, rowHeight = 150 }) {
+  const { timeslots, days, label, periods } = useLayout()
+
+  function onLayoutChange(newLayout: Layout) {}
+
+  const timeslotLayout = React.useMemo(() => {
+    return timeslots.map((timeslot, i) => {
+      return {
+        i: `timeslot-${i}`,
+        x: 0,
+        y: i + 1,
+        w: 1,
+        h: 1,
+        static: true,
+        ...commonLayout,
+      }
+    })
+  }, [periods])
+
+  const dayLayout = React.useMemo(() => {
+    return days.map((day, i) => {
+      return {
+        i: `day-${i}`,
+        x: i + 1,
+        y: 0,
+        w: 1,
+        h: 1,
+        static: true,
+        ...commonLayout,
+      }
+    })
+  }, [periods])
+
+  const periodLayout = React.useMemo(() => {
+    return periods.map((period, i) => {
+      return {
+        i: `period-${i}`,
+        x: period.day,
+        y: period.timeslot,
+        w: 1,
+        h: 1,
+        ...commonLayout,
+      }
+    })
+  }, [periods])
 
   return (
     <div>
-      <button onClick={resetLayout}>Reset Layout</button>
-      <div className="relative">
+      <HStack mb={4}>
+        <OptionsModal />
+      </HStack>
+      <Box
+        d="relative"
+        border="solid 1px"
+        borderRadius="md"
+        borderColor="gray.300"
+      >
         <ReactGridLayout
           className="layout"
           cols={cols}
           rowHeight={rowHeight}
-          layout={layout}
+          verticalCompact={false}
+          layout={[
+            ...timeslotLayout,
+            ...periodLayout,
+            ...dayLayout,
+            labelLayout,
+          ]}
           onLayoutChange={onLayoutChange}
         >
-          <Period key="1" grid={{ w: 2, h: 3, x: 0, y: 0 }}>
-            1
-          </Period>
-          <Period key="2" grid={{ w: 2, h: 3, x: 2, y: 0 }}>
-            2
-          </Period>
-          <Period key="3" grid={{ w: 2, h: 3, x: 4, y: 0 }}>
-            3
-          </Period>
-          <Period key="4" grid={{ w: 2, h: 3, x: 6, y: 0 }}>
-            4
-          </Period>
-          <Period key="5" grid={{ w: 2, h: 3, x: 8, y: 0 }}>
-            5
-          </Period>
+          <Period key="layout-label">{label}</Period>
+          {timeslots.map((timeslot, i) => {
+            return (
+              <Period key={`timeslot-${i}`}>
+                {formatTime(timeslot.from)} - {formatTime(timeslot.until)}
+              </Period>
+            )
+          })}
+          {days.map((day, i) => {
+            return <Period key={`day-${i}`}>{day.label}</Period>
+          })}
+          {periods.map((period, i) => {
+            return <Period key={`period-${i}`}>{period.type}</Period>
+          })}
         </ReactGridLayout>
-      </div>
+      </Box>
     </div>
   )
 }

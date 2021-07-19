@@ -1,29 +1,27 @@
+import { Box } from '@chakra-ui/react'
 import React from 'react'
-
-interface PeriodLayout {
-  w: number
-  h: number
-  x: number
-  y: number
-}
 
 type Props = React.PropsWithChildren<
   {
     key: string
-    grid: PeriodLayout
   } & React.HTMLAttributes<HTMLDivElement>
 >
 
 const Period = React.forwardRef<HTMLDivElement, Props>(
-  ({ children, className, ...props }, ref) => {
+  ({ children, ...props }, ref) => {
     return (
-      <div
-        className={'border grid place-items-center' + ` ${className}`}
+      <Box
+        p={2}
+        d="grid"
+        placeItems="center"
+        border="solid 1px"
+        borderRadius="md"
+        borderColor="gray.300"
         ref={ref}
         {...props}
       >
         {children}
-      </div>
+      </Box>
     )
   }
 )
