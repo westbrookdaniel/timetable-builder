@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+label {
+  @apply block my-4;
+}
+label input {
+  @apply mt-1 px-2 py-1 block border rounded;
+}
