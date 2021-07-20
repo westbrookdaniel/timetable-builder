@@ -17,8 +17,8 @@ export default function AddPeriod() {
     addPeriod({
       id: Math.random(),
       type: selectedType,
-      timeslot: timeslots.findIndex(({ label }) => label === selectedSlot),
-      day: days.findIndex(({ label }) => label === selectedDay),
+      timeslot: timeslots.findIndex(({ label }) => label === selectedSlot) + 1,
+      day: days.findIndex(({ label }) => label === selectedDay) + 1,
     })
     toast({
       title: 'Successfully updated',

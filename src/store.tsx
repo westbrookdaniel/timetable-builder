@@ -35,13 +35,13 @@ export const useLayout = create<LayoutState>((set) => ({
   periods: [
     {
       id: 1,
-      type: 'break',
+      type: 'Math',
       day: 1,
       timeslot: 1,
     },
     {
       id: 2,
-      type: 'break',
+      type: 'Recess',
       day: 3,
       timeslot: 2,
     },
@@ -68,7 +68,10 @@ interface PeriodTypesState {
 }
 
 export const usePeriodTypes = create<PeriodTypesState>((set) => ({
-  types: [],
+  types: [
+    { colour: 'green.200', label: 'Recess' },
+    { colour: 'blue.200', label: 'Math' },
+  ],
   setTypes: (types) => set({ types }),
   addType: (type) => set((state) => ({ types: [...state.types, type] })),
   removeType: (labelToRemove) =>

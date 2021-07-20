@@ -12,5 +12,6 @@ function App() {
 
 export default App
 
-// Add Period of type in timeslot and day
+// Good default
 // Format and color
+// Printable

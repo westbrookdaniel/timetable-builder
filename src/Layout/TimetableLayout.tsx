@@ -55,8 +55,8 @@ export default function TimetableLayout({ cols = 6, rowHeight = 150 }) {
     return periods.map((period, i) => {
       return {
         i: `period-${i}`,
-        x: period.day + 1,
-        y: period.timeslot + 1,
+        x: period.day,
+        y: period.timeslot,
         w: 1,
         h: 1,
         ...commonLayout,
