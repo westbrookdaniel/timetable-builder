@@ -31,7 +31,7 @@ import PeriodType from './PeriodType'
 export default function OptionsModal() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { addType, removeType, types } = usePeriodTypes()
-  const setTimeslotsCount = useLayout((s) => s.setTimeslotsCount)
+  const setCount = useLayout((s) => s.setTimeslotsCount)
   const toast = useToast()
 
   const [timeSlotCount, setTimeSlotCount] = useState<number>(11)
@@ -39,7 +39,7 @@ export default function OptionsModal() {
   const [colour, setColour] = useState<string>('')
 
   function handleSetTimeSlots() {
-    setTimeSlotCount(timeSlotCount)
+    setCount(timeSlotCount)
     toast({
       title: 'Successfully updated',
       status: 'success',
@@ -53,6 +53,8 @@ export default function OptionsModal() {
         title: 'Successfully added',
         status: 'success',
       })
+      setLabel('')
+      setColour('')
     } else {
       toast({
         title: 'A Period Type with this label already exists',
@@ -115,7 +117,7 @@ export default function OptionsModal() {
                   label="Colour"
                   value={colour}
                   onChange={(e) => setColour(e.target.value)}
-                  placeholder="#3ff80"
+                  placeholder="#3ff800"
                   identifier="period-label"
                 />
               </VStack>
@@ -129,11 +131,17 @@ export default function OptionsModal() {
                 All Period Types
               </Heading>
               <Wrap>
-                <PeriodType
-                  onDelete={handleDeletePeriodType}
-                  label="Recess"
-                  colour="#c3f399"
-                />
+                {types.length === 0 ? (
+                  <Text color="gray.500">No Types Exist</Text>
+                ) : null}
+                {types.map((type) => (
+                  <PeriodType
+                    onDelete={handleDeletePeriodType}
+                    label={type.label}
+                    colour={type.colour}
+                    key={type.label}
+                  />
+                ))}
               </Wrap>
             </Box>
 
