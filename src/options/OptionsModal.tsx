@@ -8,7 +8,6 @@ import {
   ModalCloseButton,
   Button,
   useDisclosure,
-  Input,
   Text,
   Box,
   VStack,
@@ -27,6 +26,7 @@ import React, { useState } from 'react'
 import { useLayout, usePeriodTypes } from '../store'
 import Field from './Field'
 import PeriodType from './PeriodType'
+import { HexColorPicker } from 'react-colorful'
 
 export default function OptionsModal() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -47,6 +47,12 @@ export default function OptionsModal() {
   }
 
   function handleAddPeriodType() {
+    if (label.length === 0 || !colour) {
+      return toast({
+        title: 'Pick a label and colour',
+        status: 'error',
+      })
+    }
     if (types.find(({ label: l }) => l === label) === undefined) {
       addType({ label, colour })
       toast({
@@ -102,28 +108,33 @@ export default function OptionsModal() {
             </HStack>
             <Divider my={6} />
             <Box pb={2}>
-              <Heading mb={3} size="sm">
-                Add New Period Type
-              </Heading>
-              <VStack alignItems="flex-start">
-                <Field
-                  label="Label"
-                  value={label}
-                  onChange={(e) => setLabel(e.target.value)}
-                  placeholder="Eg Recess"
-                  identifier="period-label"
-                />
-                <Field
-                  label="Colour"
-                  value={colour}
-                  onChange={(e) => setColour(e.target.value)}
-                  placeholder="#95f067 or blue.200"
-                  identifier="period-label"
-                />
-              </VStack>
-              <Button onClick={handleAddPeriodType} mt={4} size="sm">
-                Add
-              </Button>
+              <HStack justifyContent="space-between">
+                <Box>
+                  <Heading mb={3} size="sm">
+                    Add New Period Type
+                  </Heading>
+                  <VStack alignItems="flex-start">
+                    <Field
+                      label="Label"
+                      value={label}
+                      onChange={(e) => setLabel(e.target.value)}
+                      placeholder="Eg Recess"
+                      identifier="period-label"
+                    />
+                    <Field
+                      label="Colour"
+                      value={colour}
+                      onChange={(e) => setColour(e.target.value)}
+                      placeholder="#95f067 or blue.200"
+                      identifier="period-label"
+                    />
+                    <Button onClick={handleAddPeriodType} mt={4} size="sm">
+                      Add
+                    </Button>
+                  </VStack>
+                </Box>
+                <HexColorPicker color={colour} onChange={setColour} />
+              </HStack>
             </Box>
             <Divider my={6} />
             <Box>
