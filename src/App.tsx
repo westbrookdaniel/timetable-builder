@@ -1,4 +1,4 @@
-import { Box, Input } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import React from 'react'
 import TimetableLayout from './Layout/TimetableLayout'
 
@@ -12,6 +12,5 @@ function App() {
 
 export default App
 
-// Format and color
 // Printable
 // Local storage
