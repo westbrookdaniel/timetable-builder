@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import RGL, { WidthProvider } from 'react-grid-layout'
 import Period from './Period'
 import 'react-grid-layout/css/styles.css'
@@ -8,8 +8,6 @@ import OptionsModal from '../options/OptionsModal'
 import { useLayout } from '../store'
 import AddPeriod from '../options/AddPeriod'
 
-type Layout = any[]
-
 const ReactGridLayout = WidthProvider(RGL)
 
 const commonLayout = { maxW: 1 }
@@ -17,13 +15,42 @@ const commonLayout = { maxW: 1 }
 const labelLayout = { i: 'layout-label', x: 0, y: 0, w: 1, h: 1, static: true }
 
 export default function TimetableLayout({ cols = 6, rowHeight = 60 }) {
-  const { timeslots, days, label, periods, updateTimeslot, setLabel } =
-    useLayout()
+  const {
+    timeslots,
+    days,
+    label,
+    periods,
+    updateTimeslot,
+    setLabel,
+    setPeriods,
+  } = useLayout()
+  const [layout, setLayout] = useState<RGL.Layout[] | undefined>(undefined)
 
-  function onLayoutChange(newLayout: Layout) {}
+  function onLayoutChange(
+    internal: RGL.Layout[],
+    layout: RGL.Layout[] | undefined
+  ) {
+    if (!layout) return
 
-  const timeslotLayout = React.useMemo(() => {
-    return timeslots.map((timeslot, i) => {
+    const newPeriodLayout = internal.filter(
+      (layout) => layout.i.substring(0, 'period-'.length) === 'period-'
+    )
+
+    const newPeriods = newPeriodLayout.map((layout) => {
+      const period = periods.find(
+        (p) => p.id === layout.i.substring('period-'.length, layout.i.length)
+      )
+      if (!period) throw new Error('Period not found')
+      return { ...period, size: layout.h, day: layout.x, timeslot: layout.y }
+    })
+
+    console.log(newPeriods)
+
+    setPeriods(newPeriods)
+  }
+
+  useEffect(() => {
+    const timeslotLayout = timeslots.map((timeslot, i) => {
       return {
         i: `timeslot-${i}`,
         x: 0,
@@ -34,10 +61,7 @@ export default function TimetableLayout({ cols = 6, rowHeight = 60 }) {
         ...commonLayout,
       }
     })
-  }, [periods])
-
-  const dayLayout = React.useMemo(() => {
-    return days.map((day, i) => {
+    const dayLayout = days.map((day, i) => {
       return {
         i: `day-${i}`,
         x: i + 1,
@@ -48,20 +72,20 @@ export default function TimetableLayout({ cols = 6, rowHeight = 60 }) {
         ...commonLayout,
       }
     })
-  }, [periods])
 
-  const periodLayout = React.useMemo(() => {
-    return periods.map((period, i) => {
+    const periodLayout = periods.map((period, i) => {
       return {
         i: `period-${period.id}`,
         x: period.day,
         y: period.timeslot,
         w: 1,
-        h: 1,
+        h: period.size,
         ...commonLayout,
       }
     })
-  }, [periods])
+
+    setLayout([...timeslotLayout, ...dayLayout, ...periodLayout, labelLayout])
+  }, [])
 
   return (
     <div>
@@ -86,13 +110,10 @@ export default function TimetableLayout({ cols = 6, rowHeight = 60 }) {
           rowHeight={rowHeight}
           verticalCompact={false}
           margin={[-1, -1]}
-          layout={[
-            ...timeslotLayout,
-            ...periodLayout,
-            ...dayLayout,
-            labelLayout,
-          ]}
-          onLayoutChange={onLayoutChange}
+          layout={layout}
+          onLayoutChange={(internalLayout) =>
+            onLayoutChange(internalLayout, layout)
+          }
         >
           <Period
             key="layout-label"

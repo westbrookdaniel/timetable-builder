@@ -117,7 +117,7 @@ export default function OptionsModal() {
                   label="Colour"
                   value={colour}
                   onChange={(e) => setColour(e.target.value)}
-                  placeholder="#3ff800"
+                  placeholder="#95f067 or blue.200"
                   identifier="period-label"
                 />
               </VStack>

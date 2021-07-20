@@ -14,10 +14,11 @@ export interface Layout {
 }
 
 export interface Period {
-  id: number | string
+  id: string
   type: string
   timeslot: number
   day: number
+  size: number
 }
 
 export interface PeriodType {
