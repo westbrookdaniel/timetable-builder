@@ -3,10 +3,11 @@ import RGL, { WidthProvider } from 'react-grid-layout'
 import Period from './Period'
 import 'react-grid-layout/css/styles.css'
 import './TimetableLayout.css'
-import { Box, HStack } from '@chakra-ui/react'
+import { Box, HStack, IconButton } from '@chakra-ui/react'
 import OptionsModal from '../options/OptionsModal'
 import { useLayout } from '../store'
 import AddPeriod from '../options/AddPeriod'
+import { PrinterIcon } from '@heroicons/react/solid'
 
 const ReactGridLayout = WidthProvider(RGL)
 
@@ -43,8 +44,6 @@ export default function TimetableLayout({ cols = 6, rowHeight = 60 }) {
       if (!period) throw new Error('Period not found')
       return { ...period, size: layout.h, day: layout.x, timeslot: layout.y }
     })
-
-    console.log(newPeriods)
 
     setPeriods(newPeriods)
   }
@@ -89,12 +88,17 @@ export default function TimetableLayout({ cols = 6, rowHeight = 60 }) {
 
   return (
     <div>
-      <HStack className="hideOnPrint" mb={4} justify="space-between">
-        <Box mr={4}>
-          <OptionsModal />
-        </Box>
+      <HStack className="hideOnPrint" mb={8} justify="space-between">
         <HStack>
           <AddPeriod />
+        </HStack>
+        <HStack mr={4}>
+          <IconButton
+            onClick={window.print}
+            aria-label="print"
+            icon={<PrinterIcon width="20px" />}
+          />
+          <OptionsModal />
         </HStack>
       </HStack>
       <Box
