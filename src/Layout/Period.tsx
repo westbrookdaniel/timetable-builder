@@ -1,4 +1,4 @@
-import { Box, Icon, useToast } from '@chakra-ui/react'
+import { Box, Icon, useBoolean, useToast } from '@chakra-ui/react'
 import { XIcon } from '@heroicons/react/solid'
 import debounce from 'lodash/debounce'
 import React, { useRef, useState } from 'react'
@@ -27,6 +27,7 @@ const Period = React.forwardRef<HTMLDivElement, Props>(
     const colour = types.find((t) => t.label === type)?.colour
     const removePeriod = useLayout((s) => s.removePeriod)
     const [draftLabel, setDraftLabel] = useState(label)
+    const [isDeleteHidden, setIsDeleteHidden] = useBoolean(true)
 
     function handleDelete() {
       if (identifier) {
@@ -55,12 +56,15 @@ const Period = React.forwardRef<HTMLDivElement, Props>(
       <Box
         className={`periodCell ${className}`}
         bg={colour}
-        p={2}
+        p={1}
         d="grid"
         placeItems="center"
         border="solid 1px "
         borderColor={colour ? colour : 'gray.300'}
         ref={ref}
+        textAlign="center"
+        onMouseEnter={setIsDeleteHidden.off}
+        onMouseLeave={setIsDeleteHidden.on}
         {...props}
       >
         {onEdit ? (
@@ -69,8 +73,11 @@ const Period = React.forwardRef<HTMLDivElement, Props>(
           label
         )}
         {children}
-        {identifier ? (
+        {identifier && !isDeleteHidden ? (
           <Icon
+            bg={colour ? colour : 'gray.300'}
+            _hover={{ bg: 'white' }}
+            borderRadius="full"
             className="hideOnPrint"
             position="absolute"
             top={0}
@@ -78,8 +85,10 @@ const Period = React.forwardRef<HTMLDivElement, Props>(
             cursor="pointer"
             onClick={handleDelete}
             as={XIcon}
-            width={'15px'}
-            m={2}
+            padding="2px"
+            width="20px"
+            height="20px"
+            m={1}
           />
         ) : null}
       </Box>

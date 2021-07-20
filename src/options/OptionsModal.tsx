@@ -75,7 +75,7 @@ export default function OptionsModal() {
     <>
       <Button onClick={onOpen}>Options</Button>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal size="xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Timetable Options</ModalHeader>
