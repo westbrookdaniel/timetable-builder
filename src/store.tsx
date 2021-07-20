@@ -1,8 +1,8 @@
 import create from 'zustand'
 import createTimeslots from './helpers/createTimeslots'
-import { Day, Layout, Period, Timeslot } from './types'
+import { Day, Layout, Period, PeriodType, Timeslot } from './types'
 
-interface State extends Layout {
+interface LayoutState extends Layout {
   setDays: (days: Day[]) => void
   setTimeslots: (timeslots: Timeslot[]) => void
   setTimeslotsCount: (timeslotsCount: number) => void
@@ -10,7 +10,7 @@ interface State extends Layout {
   setPeriods: (periods: Period[]) => void
 }
 
-export const useLayout = create<State>((set) => ({
+export const useLayout = create<LayoutState>((set) => ({
   label: 'My Timetable',
   days: [
     {
@@ -48,4 +48,21 @@ export const useLayout = create<State>((set) => ({
   setTimeslotsCount: (timeslotsCount) =>
     set({ timeslots: createTimeslots(timeslotsCount) }),
   setPeriods: (periods) => set({ periods }),
+}))
+
+interface PeriodTypesState {
+  types: PeriodType[]
+  setTypes: (types: PeriodType[]) => void
+  addType: (type: PeriodType) => void
+  removeType: (label: string) => void
+}
+
+export const usePeriodTypes = create<PeriodTypesState>((set) => ({
+  types: [],
+  setTypes: (types) => set({ types }),
+  addType: (type) => set((state) => ({ types: [...state.types, type] })),
+  removeType: (labelToRemove) =>
+    set((state) => ({
+      types: state.types.filter(({ label }) => label !== labelToRemove),
+    })),
 }))

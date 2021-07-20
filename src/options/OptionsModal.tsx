@@ -21,15 +21,53 @@ import {
   Divider,
   Wrap,
   HStack,
+  useToast,
 } from '@chakra-ui/react'
-import React from 'react'
+import React, { useState } from 'react'
+import { useLayout, usePeriodTypes } from '../store'
 import Field from './Field'
 import PeriodType from './PeriodType'
 
 export default function OptionsModal() {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { addType, removeType, types } = usePeriodTypes()
+  const setTimeslotsCount = useLayout((s) => s.setTimeslotsCount)
+  const toast = useToast()
 
-  function handleDelete(label: string) {}
+  const [timeSlotCount, setTimeSlotCount] = useState<number>(11)
+  const [label, setLabel] = useState<string>('')
+  const [colour, setColour] = useState<string>('')
+
+  function handleSetTimeSlots() {
+    setTimeSlotCount(timeSlotCount)
+    toast({
+      title: 'Successfully updated',
+      status: 'success',
+    })
+  }
+
+  function handleAddPeriodType() {
+    if (types.find(({ label: l }) => l === label) === undefined) {
+      addType({ label, colour })
+      toast({
+        title: 'Successfully added',
+        status: 'success',
+      })
+    } else {
+      toast({
+        title: 'A Period Type with this label already exists',
+        status: 'error',
+      })
+    }
+  }
+
+  function handleDeletePeriodType(label: string) {
+    removeType(label)
+    toast({
+      title: 'Successfully deleted',
+      status: 'success',
+    })
+  }
 
   return (
     <>
@@ -46,14 +84,19 @@ export default function OptionsModal() {
               <Text as="label">Number of Time Slots</Text>
             </Box>
             <HStack alignItems="center">
-              <NumberInput defaultValue={11} min={10} max={20}>
+              <NumberInput
+                onChange={(_, valueAsNumber) => setTimeSlotCount(valueAsNumber)}
+                value={timeSlotCount}
+                min={1}
+                max={20}
+              >
                 <NumberInputField />
                 <NumberInputStepper>
                   <NumberIncrementStepper />
                   <NumberDecrementStepper />
                 </NumberInputStepper>
               </NumberInput>
-              <Button onClick={onClose}>Set</Button>
+              <Button onClick={handleSetTimeSlots}>Set</Button>
             </HStack>
             <Divider my={6} />
             <Box pb={2}>
@@ -63,16 +106,20 @@ export default function OptionsModal() {
               <VStack alignItems="flex-start">
                 <Field
                   label="Label"
+                  value={label}
+                  onChange={(e) => setLabel(e.target.value)}
                   placeholder="Eg Recess"
                   identifier="period-label"
                 />
                 <Field
                   label="Colour"
+                  value={colour}
+                  onChange={(e) => setColour(e.target.value)}
                   placeholder="#3ff80"
                   identifier="period-label"
                 />
               </VStack>
-              <Button mt={4} size="sm" onClick={onClose}>
+              <Button onClick={handleAddPeriodType} mt={4} size="sm">
                 Add
               </Button>
             </Box>
@@ -83,7 +130,7 @@ export default function OptionsModal() {
               </Heading>
               <Wrap>
                 <PeriodType
-                  onDelete={handleDelete}
+                  onDelete={handleDeletePeriodType}
                   label="Recess"
                   colour="#c3f399"
                 />
