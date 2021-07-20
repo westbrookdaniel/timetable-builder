@@ -1,5 +1,5 @@
 export interface Timeslot {
-  id: string | number
+  id: string
   label: string
 }
 export interface Day {

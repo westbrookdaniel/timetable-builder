@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import RGL, { WidthProvider } from 'react-grid-layout'
 import Period from './Period'
 import 'react-grid-layout/css/styles.css'
@@ -8,6 +8,7 @@ import OptionsModal from '../options/OptionsModal'
 import { useLayout } from '../store'
 import AddPeriod from '../options/AddPeriod'
 import { PrinterIcon } from '@heroicons/react/solid'
+import { isEqual } from 'lodash'
 
 const ReactGridLayout = WidthProvider(RGL)
 
@@ -25,30 +26,8 @@ export default function TimetableLayout({ cols = 6, rowHeight = 60 }) {
     setLabel,
     setPeriods,
   } = useLayout()
-  const [layout, setLayout] = useState<RGL.Layout[] | undefined>(undefined)
 
-  function onLayoutChange(
-    internal: RGL.Layout[],
-    layout: RGL.Layout[] | undefined
-  ) {
-    if (!layout) return
-
-    const newPeriodLayout = internal.filter(
-      (layout) => layout.i.substring(0, 'period-'.length) === 'period-'
-    )
-
-    const newPeriods = newPeriodLayout.map((layout) => {
-      const period = periods.find(
-        (p) => p.id === layout.i.substring('period-'.length, layout.i.length)
-      )
-      if (!period) throw new Error('Period not found')
-      return { ...period, size: layout.h, day: layout.x, timeslot: layout.y }
-    })
-
-    setPeriods(newPeriods)
-  }
-
-  useEffect(() => {
+  const layout = useMemo(() => {
     const timeslotLayout = timeslots.map((timeslot, i) => {
       return {
         i: `timeslot-${i}`,
@@ -83,8 +62,29 @@ export default function TimetableLayout({ cols = 6, rowHeight = 60 }) {
       }
     })
 
-    setLayout([...timeslotLayout, ...dayLayout, ...periodLayout, labelLayout])
-  }, [])
+    return [...timeslotLayout, ...dayLayout, ...periodLayout, labelLayout]
+  }, [periods])
+
+  function onLayoutChange(
+    internal: RGL.Layout[],
+    layout: RGL.Layout[] | undefined
+  ) {
+    if (!layout) return
+
+    const newPeriodLayout = internal.filter(
+      (layout) => layout.i.substring(0, 'period-'.length) === 'period-'
+    )
+
+    const newPeriods = newPeriodLayout.map((layout) => {
+      const period = periods.find(
+        (p) => p.id === layout.i.substring('period-'.length, layout.i.length)
+      )
+      if (!period) throw new Error('Period not found')
+      return { ...period, size: layout.h, day: layout.x, timeslot: layout.y }
+    })
+
+    setPeriods(newPeriods)
+  }
 
   return (
     <div>
@@ -112,7 +112,7 @@ export default function TimetableLayout({ cols = 6, rowHeight = 60 }) {
           className="layout"
           cols={cols}
           rowHeight={rowHeight}
-          verticalCompact={false}
+          compactType={null}
           margin={[-1, -1]}
           layout={layout}
           onLayoutChange={(internalLayout) =>

@@ -11,7 +11,12 @@ interface Props {
 const PeriodType: React.FC<Props> = ({ label, onDelete, colour }) => {
   return (
     <HStack spacing={4}>
-      <Tag size="lg" borderRadius="full" bg={colour}>
+      <Tag
+        title={`${label}: ${colour}`}
+        size="lg"
+        borderRadius="full"
+        bg={colour}
+      >
         <TagLabel>{label}</TagLabel>
         <Icon
           cursor="pointer"

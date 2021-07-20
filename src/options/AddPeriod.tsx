@@ -1,4 +1,4 @@
-import { Button, Input, Select, useToast } from '@chakra-ui/react'
+import { Button, Select, useToast } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { useLayout, usePeriodTypes } from '../store'
 
@@ -14,17 +14,20 @@ export default function AddPeriod() {
   const addPeriod = useLayout((s) => s.addPeriod)
 
   function handleAdd() {
-    addPeriod({
-      id: Math.random().toString(),
-      type: selectedType,
-      timeslot: timeslots.findIndex(({ label }) => label === selectedSlot) + 1,
-      day: days.findIndex(({ label }) => label === selectedDay) + 1,
-      size: 1,
-    })
-    toast({
-      title: 'Successfully updated',
-      status: 'success',
-    })
+    if (!selectedType || !selectedDay || !selectedSlot) {
+      toast({
+        title: 'Not all options have been selected',
+        status: 'error',
+      })
+    } else {
+      addPeriod({
+        id: Math.random().toString(),
+        type: selectedType,
+        timeslot: timeslots.findIndex(({ id }) => id === selectedSlot) + 1,
+        day: days.findIndex(({ label }) => label === selectedDay) + 1,
+        size: 1,
+      })
+    }
   }
 
   return (
@@ -72,7 +75,7 @@ export default function AddPeriod() {
       >
         {timeslots.map((timeslot) => {
           return (
-            <option key={timeslot.label} value={timeslot.label}>
+            <option key={timeslot.id} value={timeslot.id}>
               {timeslot.label}
             </option>
           )

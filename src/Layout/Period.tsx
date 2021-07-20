@@ -31,10 +31,6 @@ const Period = React.forwardRef<HTMLDivElement, Props>(
     function handleDelete() {
       if (identifier) {
         removePeriod(identifier.id)
-        toast({
-          title: 'Successfully deleted',
-          status: 'success',
-        })
       } else {
         toast({
           title: 'Unable to delete',
