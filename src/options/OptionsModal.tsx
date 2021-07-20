@@ -20,12 +20,16 @@ import {
   Heading,
   Divider,
   Wrap,
+  HStack,
 } from '@chakra-ui/react'
 import React from 'react'
 import Field from './Field'
+import PeriodType from './PeriodType'
 
 export default function OptionsModal() {
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  function handleDelete(label: string) {}
 
   return (
     <>
@@ -38,8 +42,10 @@ export default function OptionsModal() {
           <ModalCloseButton />
           <ModalBody>
             <Divider mb={6} />
-            <VStack pb={2} alignItems="flex-start">
+            <Box mb={1}>
               <Text as="label">Number of Time Slots</Text>
+            </Box>
+            <HStack alignItems="center">
               <NumberInput defaultValue={11} min={10} max={20}>
                 <NumberInputField />
                 <NumberInputStepper>
@@ -47,7 +53,8 @@ export default function OptionsModal() {
                   <NumberDecrementStepper />
                 </NumberInputStepper>
               </NumberInput>
-            </VStack>
+              <Button onClick={onClose}>Set</Button>
+            </HStack>
             <Divider my={6} />
             <Box pb={2}>
               <Heading mb={3} size="sm">
@@ -75,7 +82,11 @@ export default function OptionsModal() {
                 All Period Types
               </Heading>
               <Wrap>
-                <p>Recess</p>
+                <PeriodType
+                  onDelete={handleDelete}
+                  label="Recess"
+                  colour="#c3f399"
+                />
               </Wrap>
             </Box>
 

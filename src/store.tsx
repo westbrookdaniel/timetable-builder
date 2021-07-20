@@ -1,8 +1,10 @@
 import create from 'zustand'
-import { Day, Layout, Period, PeriodType, Timeslot } from './types'
+import createTimeslots from './helpers/createTimeslots'
+import { Day, Layout, Period, Timeslot } from './types'
 
 interface State extends Layout {
   setDays: (days: Day[]) => void
+  setTimeslots: (timeslots: Timeslot[]) => void
   setTimeslotsCount: (timeslotsCount: number) => void
   setLabel: (label: string) => void
   setPeriods: (periods: Period[]) => void
@@ -42,13 +44,8 @@ export const useLayout = create<State>((set) => ({
   ],
   setDays: (days) => set({ days }),
   setLabel: (label) => set({ label }),
+  setTimeslots: (timeslots) => set({ timeslots }),
   setTimeslotsCount: (timeslotsCount) =>
     set({ timeslots: createTimeslots(timeslotsCount) }),
   setPeriods: (periods) => set({ periods }),
 }))
-
-function createTimeslots(timeslotsCount: number): Timeslot[] {
-  return new Array(timeslotsCount).fill(null).map((_, i) => {
-    return { from: `${8 + i}:00`, until: `${9 + i}:00` }
-  })
-}
