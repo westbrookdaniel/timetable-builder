@@ -4,7 +4,7 @@ import { usePeriodTypes } from '../store'
 
 type Props = React.PropsWithChildren<
   {
-    type: string
+    type?: string
     key: string
   } & React.HTMLAttributes<HTMLDivElement>
 >
