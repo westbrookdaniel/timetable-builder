@@ -8,7 +8,7 @@ import OptionsModal from '../options/OptionsModal'
 import { useLayout } from '../store'
 import AddPeriod from '../options/AddPeriod'
 import { PrinterIcon } from '@heroicons/react/solid'
-import { isEqual } from 'lodash'
+import UploadManger from '../upload/UploadManger'
 
 const ReactGridLayout = WidthProvider(RGL)
 
@@ -93,6 +93,7 @@ export default function TimetableLayout({ cols = 6, rowHeight = 60 }) {
           <AddPeriod />
         </HStack>
         <HStack mr={4}>
+          <UploadManger />
           <IconButton
             onClick={window.print}
             aria-label="print"

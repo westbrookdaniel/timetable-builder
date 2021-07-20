@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware'
 import createTimeslots from './helpers/createTimeslots'
 import { Day, Layout, Period, PeriodType, Timeslot } from './types'
 
-interface LayoutState extends Layout {
+export interface LayoutState extends Layout {
   setDays: (days: Day[]) => void
   setTimeslots: (timeslots: Timeslot[]) => void
   updateTimeslot: (timeslot: Timeslot) => void
@@ -78,7 +78,7 @@ export const useLayout = create<LayoutState>(
   )
 )
 
-interface PeriodTypesState {
+export interface PeriodTypesState {
   types: PeriodType[]
   setTypes: (types: PeriodType[]) => void
   addType: (type: PeriodType) => void
