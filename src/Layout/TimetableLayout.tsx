@@ -16,7 +16,7 @@ const commonLayout = { maxW: 1 }
 
 const labelLayout = { i: 'layout-label', x: 0, y: 0, w: 1, h: 1, static: true }
 
-export default function TimetableLayout({ cols = 6, rowHeight = 150 }) {
+export default function TimetableLayout({ cols = 6, rowHeight = 60 }) {
   const { timeslots, days, label, periods } = useLayout()
 
   function onLayoutChange(newLayout: Layout) {}
@@ -64,7 +64,7 @@ export default function TimetableLayout({ cols = 6, rowHeight = 150 }) {
 
   return (
     <div>
-      <HStack mb={4} justify="space-between">
+      <HStack className="hideOnPrint" mb={4} justify="space-between">
         <Box mr={4}>
           <OptionsModal />
         </Box>

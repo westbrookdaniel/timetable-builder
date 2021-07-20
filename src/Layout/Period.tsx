@@ -18,7 +18,7 @@ type Props = React.PropsWithChildren<
 >
 
 const Period = React.forwardRef<HTMLDivElement, Props>(
-  ({ children, identifier, type, label, ...props }, ref) => {
+  ({ children, identifier, type, label, className, ...props }, ref) => {
     const toast = useToast()
     const types = usePeriodTypes((s) => s.types)
     const colour = types.find((t) => t.label === type)?.colour
@@ -41,6 +41,7 @@ const Period = React.forwardRef<HTMLDivElement, Props>(
 
     return (
       <Box
+        className={`periodCell ${className}`}
         bg={colour}
         p={2}
         d="grid"
@@ -53,6 +54,7 @@ const Period = React.forwardRef<HTMLDivElement, Props>(
         {label}
         {identifier ? (
           <Icon
+            className="hideOnPrint"
             position="absolute"
             top={0}
             left={0}
