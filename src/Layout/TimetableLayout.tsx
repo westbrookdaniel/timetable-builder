@@ -17,7 +17,8 @@ const commonLayout = { maxW: 1 }
 const labelLayout = { i: 'layout-label', x: 0, y: 0, w: 1, h: 1, static: true }
 
 export default function TimetableLayout({ cols = 6, rowHeight = 60 }) {
-  const { timeslots, days, label, periods } = useLayout()
+  const { timeslots, days, label, periods, updateTimeslot, setLabel } =
+    useLayout()
 
   function onLayoutChange(newLayout: Layout) {}
 
@@ -93,9 +94,23 @@ export default function TimetableLayout({ cols = 6, rowHeight = 60 }) {
           ]}
           onLayoutChange={onLayoutChange}
         >
-          <Period key="layout-label" label={label} />
+          <Period
+            key="layout-label"
+            onEdit={(l) => {
+              setLabel(l)
+            }}
+            label={label}
+          />
           {timeslots.map((timeslot, i) => {
-            return <Period key={`timeslot-${i}`} label={timeslot.label} />
+            return (
+              <Period
+                onEdit={(l) => {
+                  updateTimeslot({ id: timeslot.id, label: l })
+                }}
+                key={`timeslot-${i}`}
+                label={timeslot.label}
+              />
+            )
           })}
           {days.map((day, i) => {
             return <Period key={`day-${i}`} label={day.label} />

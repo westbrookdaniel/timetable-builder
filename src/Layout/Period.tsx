@@ -1,7 +1,9 @@
 import { Box, Icon, useToast } from '@chakra-ui/react'
 import { XIcon } from '@heroicons/react/solid'
-import React from 'react'
+import debounce from 'lodash/debounce'
+import React, { useRef, useState } from 'react'
 import { useLayout, usePeriodTypes } from '../store'
+import { EditableLabel } from './EditableLabel'
 
 interface Identifier {
   type: string
@@ -14,15 +16,17 @@ type Props = React.PropsWithChildren<
     type?: string
     label: string
     key: string
+    onEdit?: (label: string) => void
   } & React.HTMLAttributes<HTMLDivElement>
 >
 
 const Period = React.forwardRef<HTMLDivElement, Props>(
-  ({ children, identifier, type, label, className, ...props }, ref) => {
+  ({ children, identifier, type, label, className, onEdit, ...props }, ref) => {
     const toast = useToast()
     const types = usePeriodTypes((s) => s.types)
     const colour = types.find((t) => t.label === type)?.colour
     const removePeriod = useLayout((s) => s.removePeriod)
+    const [draftLabel, setDraftLabel] = useState(label)
 
     function handleDelete() {
       if (identifier) {
@@ -39,6 +43,18 @@ const Period = React.forwardRef<HTMLDivElement, Props>(
       }
     }
 
+    const debounced = useRef(
+      debounce((l: string) => {
+        if (!onEdit) return
+        onEdit(l)
+        setDraftLabel(l)
+      }, 800)
+    ).current
+    function onLabelChange(l: string) {
+      setDraftLabel(l)
+      debounced(l)
+    }
+
     return (
       <Box
         className={`periodCell ${className}`}
@@ -51,7 +67,12 @@ const Period = React.forwardRef<HTMLDivElement, Props>(
         ref={ref}
         {...props}
       >
-        {label}
+        {onEdit ? (
+          <EditableLabel value={draftLabel} onChange={onLabelChange} />
+        ) : (
+          label
+        )}
+        {children}
         {identifier ? (
           <Icon
             className="hideOnPrint"

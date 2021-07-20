@@ -4,7 +4,7 @@ import TimetableLayout from './Layout/TimetableLayout'
 
 function App() {
   return (
-    <Box className="app" p={4}>
+    <Box fontSize="sm" className="app" p={4}>
       <TimetableLayout />
     </Box>
   )

@@ -5,6 +5,7 @@ import { Day, Layout, Period, PeriodType, Timeslot } from './types'
 interface LayoutState extends Layout {
   setDays: (days: Day[]) => void
   setTimeslots: (timeslots: Timeslot[]) => void
+  updateTimeslot: (timeslot: Timeslot) => void
   setTimeslotsCount: (timeslotsCount: number) => void
   setLabel: (label: string) => void
   setPeriods: (periods: Period[]) => void
@@ -49,6 +50,13 @@ export const useLayout = create<LayoutState>((set) => ({
   setDays: (days) => set({ days }),
   setLabel: (label) => set({ label }),
   setTimeslots: (timeslots) => set({ timeslots }),
+  updateTimeslot: (timeslot) =>
+    set((state) => {
+      const timeslots = [...state.timeslots]
+      const i = timeslots.findIndex((ts) => ts.id === timeslot.id)
+      timeslots.splice(i, 1, timeslot)
+      return { timeslots }
+    }),
   setTimeslotsCount: (timeslotsCount) =>
     set({ timeslots: createTimeslots(timeslotsCount) }),
   setPeriods: (periods) => set({ periods }),

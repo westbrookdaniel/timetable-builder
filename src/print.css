@@ -2,6 +2,9 @@
   .hideOnPrint {
     display: none !important;
   }
+  .react-resizable-handle {
+    display: none !important;
+  }
 }
 
 .app {
