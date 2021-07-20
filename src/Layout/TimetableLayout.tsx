@@ -8,6 +8,7 @@ import { Box, Button, HStack, layout } from '@chakra-ui/react'
 import OptionsModal from '../options/OptionsModal'
 import { useLayout } from '../store'
 import { formatTime } from '../helpers/formatTime'
+import AddPeriod from '../options/AddPeriod'
 
 type Layout = any[]
 
@@ -54,8 +55,8 @@ export default function TimetableLayout({ cols = 6, rowHeight = 150 }) {
     return periods.map((period, i) => {
       return {
         i: `period-${i}`,
-        x: period.day,
-        y: period.timeslot,
+        x: period.day + 1,
+        y: period.timeslot + 1,
         w: 1,
         h: 1,
         ...commonLayout,
@@ -65,8 +66,13 @@ export default function TimetableLayout({ cols = 6, rowHeight = 150 }) {
 
   return (
     <div>
-      <HStack mb={4}>
-        <OptionsModal />
+      <HStack mb={4} justify="space-between">
+        <Box mr={4}>
+          <OptionsModal />
+        </Box>
+        <HStack>
+          <AddPeriod />
+        </HStack>
       </HStack>
       <Box
         d="relative"
@@ -89,17 +95,17 @@ export default function TimetableLayout({ cols = 6, rowHeight = 150 }) {
         >
           <Period key="layout-label">{label}</Period>
           {timeslots.map((timeslot, i) => {
-            return (
-              <Period key={`timeslot-${i}`}>
-                {formatTime(timeslot.from)} - {formatTime(timeslot.until)}
-              </Period>
-            )
+            return <Period key={`timeslot-${i}`}>{timeslot.label}</Period>
           })}
           {days.map((day, i) => {
             return <Period key={`day-${i}`}>{day.label}</Period>
           })}
           {periods.map((period, i) => {
-            return <Period key={`period-${i}`}>{period.type}</Period>
+            return (
+              <Period type={period.type} key={`period-${i}`}>
+                {period.type}
+              </Period>
+            )
           })}
         </ReactGridLayout>
       </Box>

@@ -1,8 +1,5 @@
-type Time = string
-
 export interface Timeslot {
-  from: Time
-  until: Time
+  label: string
 }
 export interface Day {
   label: string
@@ -16,6 +13,7 @@ export interface Layout {
 }
 
 export interface Period {
+  id: number | string
   type: string
   timeslot: number
   day: number

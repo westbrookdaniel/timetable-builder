@@ -8,6 +8,8 @@ interface LayoutState extends Layout {
   setTimeslotsCount: (timeslotsCount: number) => void
   setLabel: (label: string) => void
   setPeriods: (periods: Period[]) => void
+  addPeriod: (period: Period) => void
+  removePeriod: (id: string) => void
 }
 
 export const useLayout = create<LayoutState>((set) => ({
@@ -32,11 +34,13 @@ export const useLayout = create<LayoutState>((set) => ({
   timeslots: createTimeslots(11),
   periods: [
     {
+      id: 1,
       type: 'break',
       day: 1,
       timeslot: 1,
     },
     {
+      id: 2,
       type: 'break',
       day: 3,
       timeslot: 2,
@@ -48,6 +52,12 @@ export const useLayout = create<LayoutState>((set) => ({
   setTimeslotsCount: (timeslotsCount) =>
     set({ timeslots: createTimeslots(timeslotsCount) }),
   setPeriods: (periods) => set({ periods }),
+  addPeriod: (period) =>
+    set((state) => ({ periods: [...state.periods, period] })),
+  removePeriod: (idToRemove: string) =>
+    set((state) => ({
+      periods: state.periods.filter(({ id }) => id !== idToRemove),
+    })),
 }))
 
 interface PeriodTypesState {

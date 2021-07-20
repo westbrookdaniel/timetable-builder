@@ -12,7 +12,5 @@ function App() {
 
 export default App
 
-// Number of Time Slots
-// Table types add and remove
 // Add Period of type in timeslot and day
 // Format and color
