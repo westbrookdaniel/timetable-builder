@@ -9,7 +9,7 @@ interface LayoutState extends Layout {
   setLabel: (label: string) => void
   setPeriods: (periods: Period[]) => void
   addPeriod: (period: Period) => void
-  removePeriod: (id: string) => void
+  removePeriod: (id: string | number) => void
 }
 
 export const useLayout = create<LayoutState>((set) => ({
@@ -54,7 +54,7 @@ export const useLayout = create<LayoutState>((set) => ({
   setPeriods: (periods) => set({ periods }),
   addPeriod: (period) =>
     set((state) => ({ periods: [...state.periods, period] })),
-  removePeriod: (idToRemove: string) =>
+  removePeriod: (idToRemove) =>
     set((state) => ({
       periods: state.periods.filter(({ id }) => id !== idToRemove),
     })),

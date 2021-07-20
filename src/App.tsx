@@ -12,6 +12,6 @@ function App() {
 
 export default App
 
-// Good default
 // Format and color
 // Printable
+// Local storage

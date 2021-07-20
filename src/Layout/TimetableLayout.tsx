@@ -1,13 +1,11 @@
 import React from 'react'
 import RGL, { WidthProvider } from 'react-grid-layout'
-import { useStickyState } from '../helpers/useStickyState'
 import Period from './Period'
 import 'react-grid-layout/css/styles.css'
 import './TimetableLayout.css'
-import { Box, Button, HStack, layout } from '@chakra-ui/react'
+import { Box, HStack } from '@chakra-ui/react'
 import OptionsModal from '../options/OptionsModal'
 import { useLayout } from '../store'
-import { formatTime } from '../helpers/formatTime'
 import AddPeriod from '../options/AddPeriod'
 
 type Layout = any[]
@@ -54,7 +52,7 @@ export default function TimetableLayout({ cols = 6, rowHeight = 150 }) {
   const periodLayout = React.useMemo(() => {
     return periods.map((period, i) => {
       return {
-        i: `period-${i}`,
+        i: `period-${period.id}`,
         x: period.day,
         y: period.timeslot,
         w: 1,
@@ -79,12 +77,14 @@ export default function TimetableLayout({ cols = 6, rowHeight = 150 }) {
         border="solid 1px"
         borderRadius="md"
         borderColor="gray.300"
+        overflow="hidden"
       >
         <ReactGridLayout
           className="layout"
           cols={cols}
           rowHeight={rowHeight}
           verticalCompact={false}
+          margin={[-1, -1]}
           layout={[
             ...timeslotLayout,
             ...periodLayout,
@@ -93,18 +93,21 @@ export default function TimetableLayout({ cols = 6, rowHeight = 150 }) {
           ]}
           onLayoutChange={onLayoutChange}
         >
-          <Period key="layout-label">{label}</Period>
+          <Period key="layout-label" label={label} />
           {timeslots.map((timeslot, i) => {
-            return <Period key={`timeslot-${i}`}>{timeslot.label}</Period>
+            return <Period key={`timeslot-${i}`} label={timeslot.label} />
           })}
           {days.map((day, i) => {
-            return <Period key={`day-${i}`}>{day.label}</Period>
+            return <Period key={`day-${i}`} label={day.label} />
           })}
           {periods.map((period, i) => {
             return (
-              <Period type={period.type} key={`period-${i}`}>
-                {period.type}
-              </Period>
+              <Period
+                type={period.type}
+                identifier={{ type: 'period', id: period.id }}
+                key={`period-${period.id}`}
+                label={period.type}
+              />
             )
           })}
         </ReactGridLayout>
