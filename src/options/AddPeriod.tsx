@@ -15,10 +15,11 @@ export default function AddPeriod() {
 
   function handleAdd() {
     addPeriod({
-      id: Math.random(),
+      id: Math.random().toString(),
       type: selectedType,
       timeslot: timeslots.findIndex(({ label }) => label === selectedSlot) + 1,
       day: days.findIndex(({ label }) => label === selectedDay) + 1,
+      size: 1,
     })
     toast({
       title: 'Successfully updated',
